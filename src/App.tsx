@@ -106,7 +106,8 @@ function App() {
 			<footer className="footer footer-center p-4 bg-base-200/50 backdrop-blur-sm text-base-content border-t border-base-300 mt-8">
 				<div>
 					<p className="text-base-content/60 text-sm">
-						Copyright © 2024 - All rights reserved by Windsor Crest Club
+						Copyright © {new Date().getFullYear()} - All rights reserved by
+						Windsor Crest Club
 					</p>
 				</div>
 			</footer>
