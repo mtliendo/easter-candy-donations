@@ -1,17 +1,25 @@
 import { generateClient } from 'aws-amplify/api'
 import { Schema } from '../amplify/data/resource'
+import { useState } from 'react'
 
 const client = generateClient<Schema>()
 
 function App() {
-	const createDonationCheckout = async () => {
-		const res = await client.mutations.createDonationCheckout({
-			successUrl: `${window.location.origin}/success`,
-			cancelUrl: `${window.location.origin}`,
-		})
+	const [isLoading, setIsLoading] = useState(false)
 
-		if (res.data?.url) {
-			window.open(res.data.url, '_blank')
+	const createDonationCheckout = async () => {
+		setIsLoading(true)
+		try {
+			const res = await client.mutations.createDonationCheckout({
+				successUrl: `${window.location.origin}/success`,
+				cancelUrl: `${window.location.origin}`,
+			})
+
+			if (res.data?.url) {
+				window.open(res.data.url, '_blank')
+			}
+		} finally {
+			setIsLoading(false)
 		}
 	}
 
@@ -61,8 +69,16 @@ function App() {
 						<button
 							onClick={createDonationCheckout}
 							className="btn btn-primary btn-lg text-primary-content font-semibold tracking-wide px-12 hover:scale-105 transition-transform duration-200 shadow-lg"
+							disabled={isLoading}
 						>
-							Make a Donation
+							{isLoading ? (
+								<>
+									<span className="loading loading-spinner loading-sm"></span>
+									Processing...
+								</>
+							) : (
+								'Make a Donation'
+							)}
 						</button>
 					</div>
 
