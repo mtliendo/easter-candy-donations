@@ -5,7 +5,10 @@ const client = generateClient<Schema>()
 
 function App() {
 	const createDonationCheckout = async () => {
-		const res = await client.mutations.createDonationCheckout()
+		const res = await client.mutations.createDonationCheckout({
+			successUrl: `${window.location.origin}/success`,
+			cancelUrl: `${window.location.origin}`,
+		})
 
 		if (res.data?.url) {
 			window.open(res.data.url, '_blank')

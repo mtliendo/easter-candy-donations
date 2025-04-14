@@ -9,6 +9,10 @@ const schema = a.schema({
 		.authorization((allow) => [allow.guest()]),
 	createDonationCheckout: a
 		.mutation()
+		.arguments({
+			successUrl: a.url().required(),
+			cancelUrl: a.url().required(),
+		})
 		.handler(a.handler.function(createStripeDonationCheckout))
 		.returns(a.customType({ url: a.url() }))
 		.authorization((allow) => [allow.guest()]),

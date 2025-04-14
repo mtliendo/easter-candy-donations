@@ -1,21 +1,22 @@
+import { env } from '$amplify/env/create-stripe-donation-checkout'
 import Stripe from 'stripe'
 import type { Schema } from '../../data/resource'
 
-const stripe = new Stripe(process.env.STRIPE_WCC_SECRET_KEY as string)
+const stripe = new Stripe(env.STRIPE_WCC_SECRET_KEY as string)
 
 export const handler: Schema['createDonationCheckout']['functionHandler'] =
-	async () => {
+	async (event) => {
 		try {
 			const session = await stripe.checkout.sessions.create({
 				line_items: [
 					{
-						price: process.env.STRIPE_PRICE_ID as string,
+						price: env.STRIPE_PRICE_ID as string,
 						quantity: 1,
 					},
 				],
 				mode: 'payment',
-				success_url: process.env.STRIPE_SUCCESS_URL as string,
-				cancel_url: process.env.STRIPE_CANCEL_URL as string,
+				success_url: event.arguments.successUrl,
+				cancel_url: event.arguments.cancelUrl,
 			})
 
 			if (!session.url) {
@@ -28,7 +29,7 @@ export const handler: Schema['createDonationCheckout']['functionHandler'] =
 		} catch (error) {
 			console.error(error)
 			return {
-				url: process.env.STRIPE_CANCEL_URL as string,
+				url: event.arguments.cancelUrl,
 			}
 		}
 	}
