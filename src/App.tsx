@@ -16,7 +16,7 @@ function App() {
 			})
 
 			if (res.data?.url) {
-				window.open(res.data.url, '_blank')
+				window.location.href = res.data.url
 			}
 		} finally {
 			setIsLoading(false)
